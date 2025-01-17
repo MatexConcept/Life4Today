@@ -1,0 +1,74 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  outline: none;
+  text-decoration: none;
+  border: none;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-family: 'Rubik', sans-serif;
+  background-color: var(--background-color);
+  /* color: var(--text-color); */
+  transition: all 400ms ease;
+  -webkit-transition: all 400ms ease;
+  -moz-transition: all 400ms ease;
+  -ms-transition: all 400ms ease;
+  -o-transition: all 400ms ease;
+}
+
+:root {
+  --primary-color: #008080;
+  --secondary-color: #FF6F61;
+  --accent-color: #FFD700;
+  --background-color: #F0F0F0;
+  --text-color: #2F4F4F;
+  --navbar-box-shadow: rgba(33, 35, 38, 0.1);
+  --login-Container-bg: #F0F0F0;
+  --login-Container-shadow: rgba(33, 35, 38, 0.1);
+  --login-color: #008080;
+  --login-with-google-bg: #005F5F;
+  --login-with-google-bg-hover: #196f6f;
+  --login-with-google-text: #F0F0F0;
+  --login-input: #F0F0F0;
+  --user-dont-account: #005F5F;
+
+
+  --loader-bg: rgba(255, 255, 255, 0.8); /* Light mode background */
+  --loader-text: #2F4F4F;
+  --login-button-bg: #008080;
+  --login-button-text: #E0E0E0;
+  --login-button-bg-hover: #005F5F;
+  --media-query: rgba(0, 0, 0, 0.15);
+  --hover-sideBar: #B3B3B3;
+}
+
+[data-theme='dark'] {
+  --primary-color: #005F5F;
+  --secondary-color: #CC564C;
+  --accent-color: #FFB400;
+  --background-color: #1C1C1C;
+  --text-color: #E0E0E0;
+  --navbar-box-shadow: rgba(0, 0, 0, 0.5);
+  --login-Container-bg: #1C1C1C;
+  --login-Container-shadow: rgba(0, 0, 0, 0.5);
+  --login-color: #F0F0F0;
+  --login-with-google-bg: #005F5F;
+  --login-with-google-bg-hover: #196f6f;
+  --login-with-google-text: #E0E0E0;
+  --login-input: #1C1C1C;
+
+  --loader-bg: rgba(28, 28, 28, 0.8); /* Dark mode background */
+  --loader-text: #E0E0E0; /* Dark mode text color */
+  --media-query: rgba(0, 0, 0, 0.55);
+  --hover-sideBar: #444;
+}
