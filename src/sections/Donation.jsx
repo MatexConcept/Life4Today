@@ -6,9 +6,6 @@ import {
   ShoppingCartIcon as Paypal,
   Bitcoin,
 } from "lucide-react";
-import axios from "axios";
-
-// Toastify Configuration
 
 const CustomLabel = ({ children, htmlFor }) => (
   <label htmlFor={htmlFor} className="block text-sm font-medium mb-2">
@@ -16,32 +13,23 @@ const CustomLabel = ({ children, htmlFor }) => (
   </label>
 );
 
-const CustomInput = ({ id, placeholder, value, onChange }) => (
+const CustomInput = ({
+  id,
+  placeholder,
+  value,
+  onChange,
+  readOnly = false,
+}) => (
   <input
     id={id}
     type="text"
     placeholder={placeholder}
     value={value}
     onChange={onChange}
+    readOnly={readOnly}
     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
 );
-
-// const CustomSelect = ({ id, value, onChange, placeholder, options }) => (
-//   <select
-//     id={id}
-//     value={value}
-//     onChange={onChange}
-//     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-//   >
-//     <option value="">{placeholder}</option>
-//     {options.map((option) => (
-//       <option key={option.code} value={option.name}>
-//         {option.name}
-//       </option>
-//     ))}
-//   </select>
-// );
 
 const CustomSelect = ({ id, value, onChange, placeholder, options }) => (
   <select
@@ -59,7 +47,6 @@ const CustomSelect = ({ id, value, onChange, placeholder, options }) => (
   </select>
 );
 
-
 const CreditCardForm = () => {
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
@@ -70,6 +57,8 @@ const CreditCardForm = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [cardHolderName, setCardHolderName] = useState("");
+  const cardRef = useRef(null);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -91,15 +80,17 @@ const CreditCardForm = () => {
     const isCardCVCValid = cardCVC.length === 3;
     const isAmountValid = parseFloat(amount) > 0;
     const isCountrySelected = country.trim() !== "";
+    const isCardHolderNameValid = cardHolderName.trim() !== "";
 
     setIsFormValid(
       isCardNumberValid &&
         isCardExpiryValid &&
         isCardCVCValid &&
         isAmountValid &&
-        isCountrySelected
+        isCountrySelected &&
+        isCardHolderNameValid
     );
-  }, [cardNumber, cardExpiry, cardCVC, amount, country]);
+  }, [cardNumber, cardExpiry, cardCVC, amount, country, cardHolderName]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,6 +103,7 @@ const CreditCardForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cardNumber,
+          cardHolderName,
           expiryDate: cardExpiry,
           cvv: cardCVC,
           amount,
@@ -128,7 +120,8 @@ const CreditCardForm = () => {
         setCardCVC("");
         setAmount("");
         setCountry("");
-        setShowModal(true); // Show the appreciation modal
+        setCardHolderName("");
+        setShowModal(true);
       } else {
         toast.error(data.error || "An error occurred.");
       }
@@ -140,103 +133,163 @@ const CreditCardForm = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        {/* Card Details */}
-        <div className="mb-4">
-          <CustomLabel htmlFor="cardNumber">Card Number</CustomLabel>
-          <CustomInput
-            id="cardNumber"
-            placeholder="1234 5678 9012 3456"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
-          />
-        </div>
+    <>
+      <div>
+        <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+          <div
+            ref={cardRef}
+            className="relative w-full h-56 bg-gradient-to-br from-[#1AD0D1] to-[#4F46E5] rounded-xl shadow-xl overflow-hidden mb-8 transition-all duration-300 ease-out"
+            style={{
+              "--mouse-x": "0px",
+              "--mouse-y": "0px",
+              transform:
+                "perspective(1000px) rotateX(var(--rotate-x, 0)) rotateY(var(--rotate-y, 0))",
+            }}
+          >
+            <div className="absolute inset-0 w-full h-full opacity-50 mix-blend-overlay">
+              <svg
+                className="absolute left-0 top-0 h-full w-full"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <pattern
+                    id="lines"
+                    width="50"
+                    height="50"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path
+                      d="M 0 50 L 50 0"
+                      stroke="#FFF"
+                      strokeWidth="0.5"
+                      fill="none"
+                    />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#lines)" />
+              </svg>
+            </div>
+            <div className="absolute top-8 left-8 right-8 bottom-8 flex flex-col justify-between text-white">
+              <div>
+                <div className="font-bold text-xl mb-4">
+                  {cardNumber || "•••• •••• •••• ••••"}
+                </div>
+                <div className="text-sm uppercase">
+                  {cardHolderName || "CARD HOLDER"}
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="text-sm">
+                  <div className="mb-1">Expires</div>
+                  <div>{cardExpiry || "MM/YY"}</div>
+                </div>
+                <div className="text-sm">
+                  <div className="mb-1">CVC</div>
+                  <div>{cardCVC || "•••"}</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div className="flex mb-4">
-          <div className="w-1/2 pr-2">
-            <CustomLabel htmlFor="expiry">Expiry Date</CustomLabel>
+          <div className="mb-4">
+            <CustomLabel htmlFor="cardNumber">Card Number</CustomLabel>
             <CustomInput
-              id="expiry"
-              placeholder="MM/YY"
-              value={cardExpiry}
-              onChange={(e) => setCardExpiry(e.target.value)}
+              id="cardNumber"
+              placeholder="1234 5678 9012 3456"
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
             />
           </div>
-          <div className="w-1/2 pl-2">
-            <CustomLabel htmlFor="cvc">CVC</CustomLabel>
+
+          <div className="mb-4">
+            <CustomLabel htmlFor="cardHolderName">Cardholder Name</CustomLabel>
             <CustomInput
-              id="cvc"
-              placeholder="123"
-              value={cardCVC}
-              onChange={(e) => setCardCVC(e.target.value)}
+              id="cardHolderName"
+              placeholder="John Doe"
+              value={cardHolderName}
+              onChange={(e) => setCardHolderName(e.target.value)}
             />
           </div>
-        </div>
 
-        {/* Amount */}
-        <div className="mb-4">
-          <CustomLabel htmlFor="amount">Amount</CustomLabel>
-          <CustomInput
-            id="amount"
-            placeholder="Enter amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-        </div>
-
-        {/* Country */}
-        <div className="mb-4">
-          <CustomLabel htmlFor="country">Country</CustomLabel>
-          <CustomSelect
-            id="country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            placeholder="Select a country"
-            options={countries}
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className={`w-full py-2 px-4 rounded-lg transition-colors ${
-            isFormValid
-              ? "bg-[#1AD0D1] text-white hover:bg-[#15B8B9]"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-          disabled={!isFormValid || isLoading}
-        >
-          {isLoading ? "Loading..." : "Donate Now"}
-        </button>
-      </form>
-
-      {/* Appreciation Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
-            <h2 className="text-2xl font-bold text-indigo-600 mb-4">
-              Thank You!
-            </h2>
-            <p className="text-gray-700">
-              Your donation has been received and is being processed. This may
-              take up to 24 hours to reflect in your account. We deeply
-              appreciate your generosity!
-            </p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
-            >
-              Close
-            </button>
+          <div className="flex mb-4">
+            <div className="w-1/2 pr-2">
+              <CustomLabel htmlFor="expiry">Expiry Date</CustomLabel>
+              <CustomInput
+                id="expiry"
+                placeholder="MM/YY"
+                value={cardExpiry}
+                onChange={(e) => setCardExpiry(e.target.value)}
+              />
+            </div>
+            <div className="w-1/2 pl-2">
+              <CustomLabel htmlFor="cvc">CVC</CustomLabel>
+              <CustomInput
+                id="cvc"
+                placeholder="123"
+                value={cardCVC}
+                onChange={(e) => setCardCVC(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+
+          <div className="mb-4">
+            <CustomLabel htmlFor="amount">Amount</CustomLabel>
+            <CustomInput
+              id="amount"
+              placeholder="Enter amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-4">
+            <CustomLabel htmlFor="country">Country</CustomLabel>
+            <CustomSelect
+              id="country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              placeholder="Select a country"
+              options={countries}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className={`w-full py-2 px-4 rounded-lg transition-colors ${
+              isFormValid
+                ? "bg-[#1AD0D1] text-white hover:bg-[#15B8B9]"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+            disabled={!isFormValid || isLoading}
+          >
+            {isLoading ? "Loading..." : "Donate Now"}
+          </button>
+        </form>
+
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+              <h2 className="text-2xl font-bold text-indigo-600 mb-4">
+                Thank You!
+              </h2>
+              <p className="text-gray-700">
+                Your donation has been received and is being processed. This may
+                take up to 24 hours to reflect in your account. We deeply
+                appreciate your generosity!
+              </p>
+              <button
+                onClick={() => setShowModal(false)}
+                className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
-
-
 
 const PayPalForm = () => {
   const [paypalDetails, setPaypalDetails] = useState({
@@ -251,12 +304,14 @@ const PayPalForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  // Fetch admin PayPal details
   useEffect(() => {
     const fetchAdminPaymentDetails = async () => {
       try {
-        const response = await fetch("http://localhost:2002/form/get-admin-payment-details");
-        if (!response.ok) throw new Error("Failed to fetch admin PayPal details.");
+        const response = await fetch(
+          "http://localhost:2002/form/get-admin-payment-details"
+        );
+        if (!response.ok)
+          throw new Error("Failed to fetch admin PayPal details.");
         const data = await response.json();
 
         const { paypalDetails } = data;
@@ -273,7 +328,6 @@ const PayPalForm = () => {
     fetchAdminPaymentDetails();
   }, []);
 
-  // Fetch countries
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -289,7 +343,6 @@ const PayPalForm = () => {
     fetchCountries();
   }, []);
 
-  // Form validation
   useEffect(() => {
     const isAmountValid = parseFloat(amount) > 0;
     const isCountrySelected = country.trim() !== "";
@@ -301,16 +354,19 @@ const PayPalForm = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:2002/form/paypal-payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount,
-          country,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:2002/form/paypal-payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount,
+            country,
+          }),
+        }
+      );
 
       if (response.ok) {
         toast.success("Thanks for donating via PayPal!");
@@ -331,7 +387,6 @@ const PayPalForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        {/* PayPal Details */}
         <div className="mb-4">
           <CustomLabel>PayPal Email</CustomLabel>
           <CustomInput value={paypalDetails.paypalEmail} readOnly={true} />
@@ -345,7 +400,6 @@ const PayPalForm = () => {
           <CustomInput value={paypalDetails.paymentNote} readOnly={true} />
         </div>
 
-        {/* Amount */}
         <div className="mb-4">
           <CustomLabel htmlFor="amount">Amount Sent</CustomLabel>
           <CustomInput
@@ -356,7 +410,6 @@ const PayPalForm = () => {
           />
         </div>
 
-        {/* Country */}
         <div className="mb-4">
           <CustomLabel htmlFor="country">Country</CustomLabel>
           <CustomSelect
@@ -368,7 +421,6 @@ const PayPalForm = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className={`w-full py-2 px-4 rounded-lg transition-colors ${
@@ -382,7 +434,6 @@ const PayPalForm = () => {
         </button>
       </form>
 
-      {/* Appreciation Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
@@ -406,34 +457,6 @@ const PayPalForm = () => {
   );
 };
 
-
-
-
-// const BitcoinForm = () => (
-  
-//   <div className="max-w-md mx-auto">
-//     <div className="mb-4">
-//       <CustomLabel>Bitcoin Address</CustomLabel>
-//       <CustomInput value="1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2" readOnly={true} />
-//     </div>
-//     <p className="text-sm text-gray-600 mt-2">
-//       Please send your Bitcoin donation to the address above. We appreciate your
-//       support!
-//     </p>
-//     <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-//       <h4 className="font-semibold mb-2">How to donate with Bitcoin:</h4>
-//       <ol className="list-decimal list-inside text-sm">
-//         <li>Copy the Bitcoin address above</li>
-//         <li>Open your Bitcoin wallet application</li>
-//         <li>Select the option to send Bitcoin</li>
-//         <li>Paste the address and enter the amount you wish to donate</li>
-//         <li>Confirm and send the transaction</li>
-//       </ol>
-//     </div>
-//   </div>
-// );
-
-
 const BitcoinForm = () => {
   const [btcDetails, setBtcDetails] = useState({
     btcWalletAddress: "",
@@ -445,12 +468,14 @@ const BitcoinForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-
   useEffect(() => {
     const fetchAdminPaymentDetails = async () => {
       try {
-        const response = await fetch("http://localhost:2002/form/get-admin-payment-details");
-        if (!response.ok) throw new Error("Failed to fetch admin Wallet details.");
+        const response = await fetch(
+          "http://localhost:2002/form/get-admin-payment-details"
+        );
+        if (!response.ok)
+          throw new Error("Failed to fetch admin Wallet details.");
         const data = await response.json();
 
         const { btcWalletAddress } = data;
@@ -458,14 +483,13 @@ const BitcoinForm = () => {
           btcWalletAddress: btcWalletAddress || "Not available",
         });
       } catch (error) {
-        toast.error("Failed to load PayPal details.");
+        toast.error("Failed to load Bitcoin wallet details.");
       }
     };
 
     fetchAdminPaymentDetails();
   }, []);
 
-  // Fetch countries
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -481,7 +505,6 @@ const BitcoinForm = () => {
     fetchCountries();
   }, []);
 
-  // Form validation
   useEffect(() => {
     const isAmountValid = parseFloat(amount) > 0;
     const isCountrySelected = country.trim() !== "";
@@ -523,18 +546,17 @@ const BitcoinForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        {/* Bitcoin Address */}
         <div className="mb-4">
           <CustomLabel>Bitcoin Address</CustomLabel>
           <CustomInput value={btcDetails.btcWalletAddress} readOnly={true} />
-          </div>
+        </div>
         <p className="text-sm text-gray-600 mt-2">
-          Please send your Bitcoin donation to the address above. We appreciate your support!
+          Please send your Bitcoin donation to the address above. We appreciate
+          your support!
         </p>
 
-        {/* Amount */}
         <div className="mb-4">
-          <CustomLabel htmlFor="amount">Amount</CustomLabel>
+          <CustomLabel htmlFor="amount">Amount Sent</CustomLabel>
           <CustomInput
             id="amount"
             placeholder="Enter amount"
@@ -543,7 +565,6 @@ const BitcoinForm = () => {
           />
         </div>
 
-        {/* Country */}
         <div className="mb-4">
           <CustomLabel htmlFor="country">Country</CustomLabel>
           <CustomSelect
@@ -555,7 +576,6 @@ const BitcoinForm = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className={`w-full py-2 px-4 rounded-lg transition-colors ${
@@ -569,14 +589,15 @@ const BitcoinForm = () => {
         </button>
       </form>
 
-      {/* Appreciation Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
-            <h2 className="text-2xl font-bold text-indigo-600 mb-4">Thank You!</h2>
+            <h2 className="text-2xl font-bold text-indigo-600 mb-4">
+              Thank You!
+            </h2>
             <p className="text-gray-700">
-              Your Bitcoin donation is being processed. This may take some time to confirm.
-              We deeply appreciate your generosity!
+              Your Bitcoin donation is being processed. This may take some time
+              to confirm. We deeply appreciate your generosity!
             </p>
             <button
               onClick={() => setShowModal(false)}
@@ -590,8 +611,6 @@ const BitcoinForm = () => {
     </div>
   );
 };
-
-
 
 const TabButton = ({ active, onClick, children }) => (
   <button
@@ -629,58 +648,67 @@ const DonationSection = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-20 mb-20">
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-[#1D1D1D]">Support Our Cause</h2>
-        <p className="text-lg mt-2 text-gray-600">
-          Your generosity can make a real difference. Choose your preferred
-          method of donation below.
-        </p>
+    <>
+      <div className="flex items-center">
+        <a href="/" className="text-2xl font-bold text-indigo-600">
+          Live4today
+        </a>
       </div>
+      <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-20 mb-20">
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-bold text-[#1D1D1D]">
+            Support Our Cause
+          </h2>
+          <p className="text-lg mt-2 text-gray-600">
+            Your generosity can make a real difference. Choose your preferred
+            method of donation below.
+          </p>
+        </div>
 
-      <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-4 text-[#1D1D1D]">
-          Why Your Donation Matters
-        </h3>
-        <p className="text-gray-700 mb-4">
-          Every contribution, no matter the size, helps us continue our mission
-          to make a positive impact in our community. Your support enables us
-          to:
-        </p>
-        <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-          <li>Provide essential resources to those in need</li>
-          <li>Fund critical research and development projects</li>
-          <li>Organize community outreach programs</li>
-          <li>Maintain and expand our support services</li>
-        </ul>
-        <p className="text-gray-700">
-          Together, we can create lasting change and build a brighter future for
-          all.
-        </p>
-      </div>
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-[#1D1D1D]">
+            Why Your Donation Matters
+          </h3>
+          <p className="text-gray-700 mb-4">
+            Every contribution, no matter the size, helps us continue our
+            mission to make a positive impact in our community. Your support
+            enables us to:
+          </p>
+          <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <li>Provide essential resources to those in need</li>
+            <li>Fund critical research and development projects</li>
+            <li>Organize community outreach programs</li>
+            <li>Maintain and expand our support services</li>
+          </ul>
+          <p className="text-gray-700">
+            Together, we can create lasting change and build a brighter future
+            for all.
+          </p>
+        </div>
 
-      <div className="mb-6">
-        <div className="flex border-b">
-          {tabs.map(({ id, Icon, label }) => (
-            <TabButton
-              key={id}
-              active={selectedTab === id}
-              onClick={() => setSelectedTab(id)}
-            >
-              <Icon className="w-5 h-5" />
-              {label}
-            </TabButton>
-          ))}
+        <div className="mb-6">
+          <div className="flex border-b">
+            {tabs.map(({ id, Icon, label }) => (
+              <TabButton
+                key={id}
+                active={selectedTab === id}
+                onClick={() => setSelectedTab(id)}
+              >
+                <Icon className="w-5 h-5" />
+                {label}
+              </TabButton>
+            ))}
+          </div>
+        </div>
+
+        {renderTabContent()}
+
+        <div className="flex items-center justify-center text-gray-600 mt-8">
+          <HeartHandshake className="w-6 h-6 mr-2 text-[#1AD0D1]" />
+          <span>Thank you for your support!</span>
         </div>
       </div>
-
-      {renderTabContent()}
-
-      <div className="flex items-center justify-center text-gray-600 mt-8">
-        <HeartHandshake className="w-6 h-6 mr-2 text-[#1AD0D1]" />
-        <span>Thank you for your support!</span>
-      </div>
-    </div>
+    </>
   );
 };
 

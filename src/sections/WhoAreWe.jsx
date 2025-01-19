@@ -1,8 +1,9 @@
-import React from 'react';
-import { CheckCircle } from 'lucide-react';
+import React from "react";
+import { CheckCircle } from "lucide-react";
 // import waw1 from '../assest/WaW1.jpg';
-import waw3 from '../assest/WaW3.jpg';
-import waw2 from '../assest/WaW2.jpg';
+import waw3 from "../assest/WaW3.jpg";
+import waw2 from "../assest/WaW2.jpg";
+import { NavLink } from "react-router-dom";
 
 const WhoWeAre = () => {
   return (
@@ -38,26 +39,38 @@ const WhoWeAre = () => {
           </div>
         </div>
         <div className="md:w-1/2">
-          <h3 className="text-[#9F5FFE] text-xl font-semibold mb-4">Who we are</h3>
+          <h3 className="text-[#9F5FFE] text-xl font-semibold mb-4">
+            Who we are
+          </h3>
           <h2 className="text-4xl font-semibold text-gray-900 mb-6">
             We're Non-Profit Charity & NGO Organization
           </h2>
           <div className="w-12 h-0.5 bg-[#1AD0D1] mb-6"></div>
           <p className="text-gray-600 mb-8">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
           </p>
           <ul className="space-y-4 mb-8">
-            {['Charity For Education', 'Charity For Food', 'Charity For Medical', 'Charity For Sports'].map((item, index) => (
+            {[
+              "Charity For Education",
+              "Charity For Food",
+              "Charity For Medical",
+              "Charity For Sports",
+            ].map((item, index) => (
               <li key={index} className="flex items-center">
                 <CheckCircle className="w-5 h-5 text-[#1AD0D1] mr-2" />
                 <span className="text-gray-900 font-semibold">{item}</span>
               </li>
             ))}
           </ul>
-          <button className="bg-[#1AD0D1] text-white font-semibold py-3 px-6 rounded hover:bg-[#15B5B6] transition duration-300">
-            Donate Now
-          </button>
+
+          <NavLink to="/donation">
+            <button className="bg-[#1AD0D1] text-white font-semibold py-3 px-6 rounded hover:bg-[#15B5B6] transition duration-300">
+              Donate Now
+            </button>
+          </NavLink>
         </div>
       </div>
     </section>
