@@ -13,9 +13,8 @@ const App = () => {
       <ToastContainer />
 
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/donation" element={<Donation />} />
-        </Route>
+        <Route path="/" element={<Layout />} />
+        <Route path="/donation" element={<Donation />} />
       </Routes>
     </>
   );

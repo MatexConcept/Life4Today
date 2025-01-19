@@ -1,14 +1,17 @@
 
 import { useState, useEffect } from 'react';
-import bg1 from '../assest/Dimg1.jpg'
-import bg2 from '../assest/Dimg2.jpg'
+import bg1 from '../assest/bhOne.avif'
+import bg2 from '../assest/bgTwo.avif'
+import bg3 from '../assest/bgThree.avif'
+import bg4 from '../assest/bgFour.avif'
+import bg5 from '../assest/bgFive.avif'
 
 const backgroundImages = [
   bg1,
   bg2,
-  bg1,
-  bg1,
-  bg1
+  bg3,
+  bg4,
+  bg5
 ];
 
 const HomePage = () => {

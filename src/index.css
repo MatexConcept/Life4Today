@@ -25,6 +25,10 @@ body {
   -ms-transition: all 400ms ease;
   -o-transition: all 400ms ease;
 }
+html {
+  scroll-behavior: smooth;
+}
+
 
 :root {
   --primary-color: #008080;

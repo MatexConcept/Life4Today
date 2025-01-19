@@ -12,31 +12,44 @@ import Faq from "./Faq";
 import Footer from "./Footer";
 
 const Layout = () => {
-  const location = useLocation();
-
-  // Check if the current route is "/donation"
-  const isDonationPage = location.pathname === "/donation";
-
-  return (
+ return (
     <div>
+      {/* Navbar */}
       <Nav />
-      {isDonationPage ? (
-        // Render only the child route (Donation page) for "/donation"
-        <Outlet />
-      ) : (
-        // Render the main layout for other routes
-        <>
-          <Home />
-          <WhoAreWe />
-          <Campaign />
-          <Founder />
-          <CTA />
-          <Faq />
-        </>
-      )}
-      <Footer />
+
+      {/* Sections */}
+      <section id="home">
+        <Home />
+      </section>
+      
+      <section id="who-we-are">
+        <WhoAreWe />
+      </section>
+      
+      <section id="our-campaign">
+        <Campaign />
+      </section>
+      
+      <section id="founder">
+        <Founder />
+      </section>
+      
+      <section id="cta">
+        <CTA />
+      </section>
+      
+      <section id="faq">
+        <Faq />
+      </section>
+      
+      <section id="footer">
+        <Footer />
+      </section>
     </div>
   );
 };
 
 export default Layout;
+
+
+
