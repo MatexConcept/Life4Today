@@ -64,7 +64,7 @@ const CreditCardForm = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("http://localhost:2002/api/countries");
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/countries`);
         const data = await response.json();
         setCountries(data);
       } catch (error) {
@@ -99,7 +99,7 @@ const CreditCardForm = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:2002/form/submit-form", {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/form/submit-form`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -309,7 +309,7 @@ const PayPalForm = () => {
     const fetchAdminPaymentDetails = async () => {
       try {
         const response = await fetch(
-          "http://localhost:2002/form/get-admin-payment-details"
+          `${process.env.REACT_APP_BACKEND_URL}/form/get-admin-payment-details`
         );
         if (!response.ok)
           throw new Error("Failed to fetch admin PayPal details.");
@@ -332,7 +332,7 @@ const PayPalForm = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("http://localhost:2002/api/countries");
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/countries`);
         if (!response.ok) throw new Error("Failed to fetch countries.");
         const data = await response.json();
         setCountries(data);
@@ -356,7 +356,7 @@ const PayPalForm = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:2002/form/paypal-payment",
+        `${process.env.REACT_APP_BACKEND_URL}/form/paypal-payment`,
         {
           method: "POST",
           headers: {
@@ -473,7 +473,7 @@ const BitcoinForm = () => {
     const fetchAdminPaymentDetails = async () => {
       try {
         const response = await fetch(
-          "http://localhost:2002/form/get-admin-payment-details"
+          `${process.env.REACT_APP_BACKEND_URL}/form/get-admin-payment-details`
         );
         if (!response.ok)
           throw new Error("Failed to fetch admin Wallet details.");
@@ -494,7 +494,7 @@ const BitcoinForm = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("http://localhost:2002/api/countries");
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/countries`);
         if (!response.ok) throw new Error("Failed to fetch countries.");
         const data = await response.json();
         setCountries(data);
@@ -517,7 +517,7 @@ const BitcoinForm = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:2002/form/submit-btc", {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/form/submit-btc`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
