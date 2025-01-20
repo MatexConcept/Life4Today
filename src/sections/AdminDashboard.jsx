@@ -460,7 +460,7 @@ const AdminDashboard = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/form/get-form-data`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}form/get-form-data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -493,7 +493,7 @@ const AdminDashboard = () => {
 
   const handleEditBtcWallet = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/form/edit-btc-wallet-address`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}form/edit-btc-wallet-address`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -517,7 +517,7 @@ const AdminDashboard = () => {
 
   const handleEditPaypalDetails = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/form/edit-paypal-details`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}form/edit-paypal-details`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
