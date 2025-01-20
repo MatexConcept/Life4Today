@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Route, Routes } from "react-router-dom";
+import AdminDashboard from "./sections/AdminDashboard";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />} />
         <Route path="/donation" element={<Donation />} />
+        <Route path="/admin-page" element={<AdminDashboard />} />
       </Routes>
     </>
   );

@@ -11,10 +11,15 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo Section */}
           <div className="flex items-center">
-            <a href="#home" className="text-2xl font-bold text-indigo-600">
-              Live4today
-            </a>
-          </div>
+              <div className="w-8 h-18 mr-2">
+                <svg viewBox="0 0 44 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 4L38 16V58L6 46V4Z" fill="#1AD0D1" />
+                  <path d="M0 0L32 12V54L0 42V0Z" fill="#9F5FFE" />
+                  <path d="M12 8H44V50L12 38V8Z" fill="#4742E7" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-[#1D1D1D]">Live4today</h2>
+            </div>
 
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-6">

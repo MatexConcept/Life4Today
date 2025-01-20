@@ -16,7 +16,7 @@ const Footer = () => {
                   <path d="M12 8H44V50L12 38V8Z" fill="#4742E7" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-semibold text-[#1D1D1D]">Donaty</h2>
+              <h2 className="text-2xl font-semibold text-[#1D1D1D]">Live4today</h2>
             </div>
             <p className="text-[#6F7775] mb-4">
             Empowering communities through generosity and support, creating a better future together.

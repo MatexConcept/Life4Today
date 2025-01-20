@@ -6,6 +6,7 @@ import {
   ShoppingCartIcon as Paypal,
   Bitcoin,
 } from "lucide-react";
+import { FaArrowLeft } from "react-icons/fa";
 
 const CustomLabel = ({ children, htmlFor }) => (
   <label htmlFor={htmlFor} className="block text-sm font-medium mb-2">
@@ -57,7 +58,7 @@ const CreditCardForm = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [cardHolderName, setCardHolderName] = useState("");
+  const [cardHolder, setCardHolder] = useState("");
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const CreditCardForm = () => {
     const isCardCVCValid = cardCVC.length === 3;
     const isAmountValid = parseFloat(amount) > 0;
     const isCountrySelected = country.trim() !== "";
-    const isCardHolderNameValid = cardHolderName.trim() !== "";
+    const isCardHolderValid = cardHolder.trim() !== "";
 
     setIsFormValid(
       isCardNumberValid &&
@@ -88,9 +89,9 @@ const CreditCardForm = () => {
         isCardCVCValid &&
         isAmountValid &&
         isCountrySelected &&
-        isCardHolderNameValid
+        isCardHolderValid
     );
-  }, [cardNumber, cardExpiry, cardCVC, amount, country, cardHolderName]);
+  }, [cardNumber, cardExpiry, cardCVC, amount, country, cardHolder]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,7 +104,7 @@ const CreditCardForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cardNumber,
-          cardHolderName,
+          cardHolder,
           expiryDate: cardExpiry,
           cvv: cardCVC,
           amount,
@@ -120,7 +121,7 @@ const CreditCardForm = () => {
         setCardCVC("");
         setAmount("");
         setCountry("");
-        setCardHolderName("");
+        setCardHolder("");
         setShowModal(true);
       } else {
         toast.error(data.error || "An error occurred.");
@@ -175,7 +176,7 @@ const CreditCardForm = () => {
                   {cardNumber || "•••• •••• •••• ••••"}
                 </div>
                 <div className="text-sm uppercase">
-                  {cardHolderName || "CARD HOLDER"}
+                  {cardHolder || "CARD HOLDER"}
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -206,8 +207,8 @@ const CreditCardForm = () => {
             <CustomInput
               id="cardHolderName"
               placeholder="John Doe"
-              value={cardHolderName}
-              onChange={(e) => setCardHolderName(e.target.value)}
+              value={cardHolder}
+              onChange={(e) => setCardHolder(e.target.value)}
             />
           </div>
 
@@ -649,11 +650,18 @@ const DonationSection = () => {
 
   return (
     <>
-      <div className="flex items-center">
-        <a href="/" className="text-2xl font-bold text-indigo-600">
-          Live4today
+      <div className="flex items-center mt-6">
+        <a
+          href="/"
+          className="text-indigo-600 hover:text-indigo-800 flex items-center gap-2"
+        >
+          <FaArrowLeft className="text-3xl sm:text-2xl md:text-4xl lg:text-5xl transition-transform duration-300 ease-in-out hover:scale-110" />
+          <span className="text-lg sm:text-sm md:text-xl lg:text-2xl font-semibold">
+            Back
+          </span>
         </a>
       </div>
+
       <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-20 mb-20">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-[#1D1D1D]">
