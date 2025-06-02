@@ -2,6 +2,10 @@ import React from 'react';
 import bg1 from '../assest/Dimg1.jpg'
 import Cimg1 from '../assest/CImg1.jpg'
 import Cimg2 from '../assest/CImg2.jpg'
+
+import { NavLink } from "react-router-dom";
+
+
 const CampaignCard = ({ title, imageSrc, raised, goal }) => (
   <div className="w-[360px] h-[498px] bg-white rounded-[22px] overflow-hidden shadow-lg">
     <div className="relative h-[232px]">
@@ -28,12 +32,14 @@ const CampaignCard = ({ title, imageSrc, raised, goal }) => (
         </div>
       </div>
       <div className="flex justify-between">
-        <button className="bg-[#1AD0D1] text-white font-outfit font-medium text-lg py-3 px-5 rounded-lg">
+      <NavLink to="/donation">
+      <button className="bg-[#1AD0D1] text-white font-outfit font-medium text-lg py-3 px-5 rounded-lg">
           Donate now
         </button>
-        {/* <button className="border border-[#1AD0D1] text-[#1AD0D1] font-outfit font-medium text-lg py-3 px-5 rounded-lg">
-          Share
-        </button> */}
+      </NavLink>
+
+     
+       
       </div>
     </div>
   </div>
